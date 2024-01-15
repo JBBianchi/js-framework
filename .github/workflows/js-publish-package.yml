@@ -31,6 +31,7 @@ jobs:
         id: detection
         uses: dorny/paths-filter@v2
         with:
+          list-files: 'json'
           filters: |
             ${{ inputs.package }}: 'projects/neuroglia/${{ inputs.package }}/src/**'
 
@@ -40,7 +41,8 @@ jobs:
       - name: Build output
         id: processed
         run: |
-          echo "changed=${{ steps.detection.outputs[inputs.package] }}" >> "$GITHUB_OUTPUT"
+          changed=`jq '.${{ inputs.package }}_files | any(. | endswith(".ts") and (. | endswith(".spec.ts") | not ) )' --compact-output`
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
   publish:
     needs: 
