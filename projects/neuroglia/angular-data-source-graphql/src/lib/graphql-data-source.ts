@@ -12,7 +12,7 @@ import {
   GRAPHQL_DATA_SOURCE_VARIABLES_MAPPER,
 } from './injection-tokens';
 import { GraphQLQueryArguments, GraphQLQueryBuilder, GraphQLVariablesMapper } from './models';
-// test ...
+// test
 /**
  * A data source used to handle GraphQL interactions
  */
