@@ -14,10 +14,36 @@ on:
         required: true
 
 jobs:
-  publish:
+  changes:
     if: (github.event_name == 'push' && github.ref_name == 'main') || github.event_name =='workflow_dispatch'
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.processed.outputs.changed }}
+      
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Detect src changes
+        id: detection
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            ${{ inputs.name }}: 'projects/neuroglia/${{ inputs.name }}/src/**'
+
+      - name: Build output
+        id: processed
+        run: |
+          echo "changed=${{ fromJSON(steps.detection.outputs.changes)[inputs.name] }}" >> "$GITHUB_OUTPUT"
+
+  publish:
+    needs: 
+       - changes
+    if: ${{ needs.changes.outputs.changed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo "Changed"
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -40,4 +66,13 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}">>.npmrc
           version=$(npm view ${{ inputs.name }} version 2>/dev/null) && npm version $version || true
           npm version patch # patch current version
-          npm publish --access=public
+          # npm publish --access=public
+
+  not_publish:
+    needs: 
+       - changes
+    if: ${{ needs.changes.outputs.changed != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug
+        run: echo "Didn't change"

@@ -47,22 +47,22 @@ jobs:
           echo "Got config for ${{ inputs.package }} - name: ${{ fromJSON(needs.config.outputs.package-config).name }} - path: ${{ fromJSON(needs.config.outputs.package-config).path }} - dependencies: ${{ join(fromJSON(needs.config.outputs.package-config).dependencies, ' ') }}"
           echo "Context event name: ${{ github.event_name }} - ref_name: ${{ github.ref_name }}"
 
-  restore:
-    needs: config
-    uses: ./.github/workflows/js-restore-dependencies.yml
-    with:
-      name: ${{ fromJSON(needs.config.outputs.package-config).name }}
-      path: ${{ fromJSON(needs.config.outputs.package-config).path }}
-      dependencies: ${{ join(fromJSON(needs.config.outputs.package-config).dependencies, ' ') }}
+  # restore:
+  #   needs: config
+  #   uses: ./.github/workflows/js-restore-dependencies.yml
+  #   with:
+  #     name: ${{ fromJSON(needs.config.outputs.package-config).name }}
+  #     path: ${{ fromJSON(needs.config.outputs.package-config).path }}
+  #     dependencies: ${{ join(fromJSON(needs.config.outputs.package-config).dependencies, ' ') }}
 
-  build:
-    needs: 
-       - config
-       - restore
-    uses: ./.github/workflows/js-build-package.yml
-    with:
-      name: ${{ fromJSON(needs.config.outputs.package-config).name }}
-      path: ${{ fromJSON(needs.config.outputs.package-config).path }}
+  # build:
+  #   needs: 
+  #      - config
+  #      - restore
+  #   uses: ./.github/workflows/js-build-package.yml
+  #   with:
+  #     name: ${{ fromJSON(needs.config.outputs.package-config).name }}
+  #     path: ${{ fromJSON(needs.config.outputs.package-config).path }}
 
   # lint:
   #   needs: 
@@ -85,7 +85,8 @@ jobs:
   publish:
     needs:
        - config
-       - build
+      #  - build
+
       #  - test
       #  - lint
     uses: ./.github/workflows/js-publish-package.yml
@@ -99,7 +100,8 @@ jobs:
     if: ${{ always() }}
     needs:
        - config
-       - build
+      #  - build
+      
        #  - test
        #  - lint
        - publish
