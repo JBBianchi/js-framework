@@ -37,7 +37,7 @@ jobs:
       - name: Build output
         id: processed
         run: |
-          echo "changed=${{ fromJSON(steps.detection.outputs)[inputs.package] }}" >> "$GITHUB_OUTPUT"
+          echo "changed=${{ steps.detection.outputs[inputs.package] }}" >> "$GITHUB_OUTPUT"
 
   publish:
     needs: 
