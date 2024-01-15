@@ -16,7 +16,7 @@ import {
   QUERYABLE_DATA_SOURCE_DATA_SELECTOR,
 } from '@neuroglia/angular-data-source-queryable';
 import { GraphQLQueryArguments, GraphQLQueryBuilder, GraphQLVariablesMapper } from './models';
-// test
+// test ...
 const testEndpoint = 'https://swapi-graphql.netlify.app/.netlify/functions/index';
 
 const target = 'allPlanets';
