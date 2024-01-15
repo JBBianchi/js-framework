@@ -33,6 +33,9 @@ jobs:
         with:
           filters: |
             ${{ inputs.package }}: 'projects/neuroglia/${{ inputs.package }}/src/**'
+            
+      - name: Debug
+        run: echo ${{ toJSON(steps.detection.outputs) }}
 
       - name: Build output
         id: processed
