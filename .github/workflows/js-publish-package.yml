@@ -47,7 +47,7 @@ jobs:
       - name: Build output
         id: processed
         run: |
-          changed=`echo '${{ steps.detection.outputs[steps.key.outputs] }}' | jq 'any(. | endswith(".ts") and (. | endswith(".spec.ts") | not ) )' --compact-output`
+          changed=`echo '${{ steps.detection.outputs[steps.key.outputs.key] }}' | jq 'any(. | endswith(".ts") and (. | endswith(".spec.ts") | not ) )' --compact-output`
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
   publish:
