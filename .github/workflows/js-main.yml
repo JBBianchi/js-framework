@@ -33,7 +33,7 @@ on:
 jobs:
   changes:
     # Skip if it's not running in the `neuroglia-io/js-framework` repo
-    if: github.repository == 'neuroglia-io/js-framework'
+    if: github.repository == 'JBBianchi/js-framework'
     runs-on: ubuntu-latest
     permissions:
       pull-requests: read
