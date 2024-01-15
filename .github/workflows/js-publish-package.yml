@@ -40,7 +40,9 @@ jobs:
         run: echo "key=${{ inputs.package }}_files" >> "$GITHUB_OUTPUT"
 
       - name: Debug
-        run: echo "${{ toJSON(steps.detection.outputs) }}"
+        run: |
+          echo "${{ toJSON(steps.detection.outputs) }}"
+          echo "${{ toJSON(steps.key.outputs) }}"
 
       - name: Build output
         id: processed
