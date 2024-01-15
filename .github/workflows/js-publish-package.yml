@@ -9,6 +9,9 @@ on:
       name:
         required: true
         type: string
+      package:
+        required: true
+        type: string
     secrets:
       NPM_TOKEN:
         required: true
@@ -29,12 +32,12 @@ jobs:
         uses: dorny/paths-filter@v2
         with:
           filters: |
-            ${{ inputs.name }}: 'projects/neuroglia/${{ inputs.name }}/src/**'
+            ${{ inputs.package }}: 'projects/neuroglia/${{ inputs.package }}/src/**'
 
       - name: Build output
         id: processed
         run: |
-          echo "changed=${{ fromJSON(steps.detection.outputs.changes)[inputs.name] }}" >> "$GITHUB_OUTPUT"
+          echo "changed=${{ fromJSON(steps.detection.outputs.changes)[inputs.package] }}" >> "$GITHUB_OUTPUT"
 
   publish:
     needs: 
