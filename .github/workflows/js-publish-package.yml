@@ -9,7 +9,7 @@ on:
       name:
         required: true
         type: string
-      package:
+      publish:
         required: true
         type: string
     secrets:
@@ -17,47 +17,10 @@ on:
         required: true
 
 jobs:
-  changes:
-    if: (github.event_name == 'push' && github.ref_name == 'main') || github.event_name =='workflow_dispatch'
-    runs-on: ubuntu-latest
-    outputs:
-      changed: ${{ steps.processed.outputs.changed }}
-      
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Detect src changes
-        id: detection
-        uses: dorny/paths-filter@v2
-        with:
-          list-files: 'json'
-          filters: |
-            ${{ inputs.package }}: 'projects/neuroglia/${{ inputs.package }}/src/**'
-    
-      - name: Build key
-        id: key
-        run: echo "key=${{ inputs.package }}_files" >> "$GITHUB_OUTPUT"
-
-      - name: Debug
-        run: |
-          echo "${{ toJSON(steps.detection.outputs) }}"
-          echo "${{ toJSON(steps.key.outputs) }}"
-
-      - name: Build output
-        id: processed
-        run: |
-          changed=`echo '${{ steps.detection.outputs[steps.key.outputs.key] }}' | jq 'any(. | endswith(".ts") and (. | endswith(".spec.ts") | not ) )' --compact-output`
-          echo "changed=$changed" >> "$GITHUB_OUTPUT"
-
   publish:
-    needs: 
-       - changes
-    if: ${{ needs.changes.outputs.changed == 'true' }}
+    if: ${{ inputs.publish == 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
-        run: echo "Changed"
       - name: Checkout repo
         uses: actions/checkout@v4
 
@@ -83,10 +46,8 @@ jobs:
           # npm publish --access=public
 
   not_publish:
-    needs: 
-       - changes
-    if: ${{ needs.changes.outputs.changed != 'true' }}
+    if: ${{ inputs.publish != 'true' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Debug
+      - name: Skip
         run: echo "Didn't change"
